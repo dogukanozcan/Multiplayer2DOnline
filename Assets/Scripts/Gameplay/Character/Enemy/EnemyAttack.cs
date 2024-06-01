@@ -41,15 +41,6 @@ public class EnemyAttack : NetworkBehaviour
         GameNetworkManager.Instance.OnGameEnd -= OnGameEnd;
     }
 
-    public override void OnDestroy()
-    {
-        base.OnDestroy();
-        if (_explodeEffect)
-        {
-            _explodeEffect.SetActive(true);
-            _explodeEffect.transform.SetParent(null);
-        }
-    }
 
     public void Attack()
     {
@@ -91,10 +82,15 @@ public class EnemyAttack : NetworkBehaviour
             }
         }
         _detonateCountdown = _explodeTime;
-
+        if (_explodeEffect)
+        {
+            _explodeEffect.SetActive(true);
+            _explodeEffect.transform.SetParent(null);
+        }
+        gameObject.SetActive(false);
         if (IsHost)
         {
-            Destroy(gameObject);
+            Destroy(gameObject,.1f);
         }
     }
 }
