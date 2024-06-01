@@ -41,6 +41,16 @@ public class EnemyAttack : NetworkBehaviour
         GameNetworkManager.Instance.OnGameEnd -= OnGameEnd;
     }
 
+    public override void OnDestroy()
+    {
+        base.OnDestroy();
+        if (_explodeEffect)
+        {
+            _explodeEffect.SetActive(true);
+            _explodeEffect.transform.SetParent(null);
+        }
+    }
+
     public void Attack()
     {
         var enemyList = Physics2D.OverlapCircleAll(transform.position, _attackRange / 2f, _enemyLayerMask).ToList();
@@ -82,12 +92,6 @@ public class EnemyAttack : NetworkBehaviour
         }
         _detonateCountdown = _explodeTime;
 
-        if (_explodeEffect)
-        {
-            _explodeEffect.SetActive(true);
-            _explodeEffect.transform.SetParent(null);
-        }
-    
         if (IsHost)
         {
             Destroy(gameObject);
